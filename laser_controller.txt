@@ -1,0 +1,9 @@
+// This file controls the laser and turns it ON
+
+int laser_pin = A5; // This is the pin number the laser is connected in
+void laser_setup() {
+  // Makes sure the laser_pin is configured as output 
+  pinMode(laser_pin, OUTPUT);
+  // Turn the laser ON
+  digitalWrite(laser_pin, HIGH);
+}

@@ -1,0 +1,47 @@
+// This file controls the bluetooth module telling it to send the phone messages when the system is armed, disarmed, or someone broke it
+
+#include <SoftwareSerial.h>                           // This is a library used to send the system messages through bluetooth 
+                                                    
+SoftwareSerial BTserial(10, 11);                      // This tells the library where the transmitting and receiving pins are
+int bluetooth_idle = 0;                               // This is the state of the bluetooth module when it is OFF and sending no information
+int bluetooth_transmitting = 1;                       // This is the state of the bluetooth module when it is ON and sending information
+int bluetooth_current_state = bluetooth_transmitting; // This is the current state of the blutooth module and it is set to transmitting
+unsigned int bluetooth_counter = 0;                   // The bluetooth counter is used to count how many times the loop has been run
+
+void bluetooth_setup() {
+  // Sets the data rate for transmitting data
+  BTserial.begin(9600);
+}
+
+void bluetooth_loop() {
+  // When the bluetooth is ON and sending information
+  if (bluetooth_current_state == bluetooth_transmitting) {
+    // When the system is armed and working
+    if (sys_current_state == sys_intact) {
+      // Inform the bluetooth connected device that the system is armed
+      BTserial.print("armed\n");
+    }
+    // When the system is broken
+    else if (sys_current_state == sys_broken) {
+      // Inform the bluetooth connected device that the system an intruder has broken in
+      BTserial.print("intruder alert\n");
+    }
+    // When the system is in configure mode
+    else if (sys_current_state == sys_configure) {
+      // Inform the bluetooth connected device that the system is disarmed
+      BTserial.print("disarmed\n");
+    }
+  }
+  // Send message after every 250 loops
+  if (bluetooth_counter % 250 == 0) {
+    // The state of the bluetooth module is changed to ON and transmitting
+    bluetooth_current_state = bluetooth_transmitting;
+  }
+  // When the loops aren't divisible by 250
+  else {
+    // The state of the bluetooth module is changed to OFF and idle
+    bluetooth_current_state = bluetooth_idle;
+  }
+  // Bluetooth counter's value goes up by one increment every loop
+  bluetooth_counter++;
+}

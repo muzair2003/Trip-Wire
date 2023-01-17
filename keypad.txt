@@ -1,0 +1,74 @@
+// This file turns the pins of rows and columns to keypad numbers and also tells the keypad buzzer when to buzz
+
+// Matching each arduino pin according to its rows and columns
+int row_pin7_out = 2;
+int row_pin6_out = 3;
+int row_pin5_out = 4;
+int row_pin4_out = 5;
+int col_pin3_in = 6;
+int col_pin2_in = 7;
+int col_pin1_in = 8;
+
+int keypad_idle = 0;                        // This is the state of the keypad when no key is pressed
+int keypad_key_pressed = 1;                 // This is the state of the keypad when a key is pressed
+int keypad_current_state = keypad_idle;     // This is the current state of the keypad and it is set to OFF
+int key_array[12] = {'1', '2', '3',         // This is an array of all the keys on the keypad
+                     '4', '5', '6',
+                     '7', '8', '9',
+                     '*', '0', '#'
+                    };
+char keypad_key;                            // This is the variabale used to store the number or characters pressed on the keypad
+int keypress_delay_counter = 0;             // This is the variabale used to count how many times the loop has been run
+int row_pin_array[4] = {row_pin7_out,       // This is an array of pins of all the rows in the keypad
+                        row_pin6_out,
+                        row_pin5_out,
+                        row_pin4_out
+                       };
+int col_pin_array[3] = {col_pin3_in,        // This is an array of pins of all the columns in the keypad
+                        col_pin2_in,
+                        col_pin1_in
+                       };
+void keypad_setup() {
+  // Configuring arduino pins making sure all the rows are configured as output pins and all the columns as input pins
+  pinMode(row_pin7_out, OUTPUT);
+  pinMode(row_pin6_out, OUTPUT);
+  pinMode(row_pin5_out, OUTPUT);
+  pinMode(row_pin4_out, OUTPUT);
+  pinMode(col_pin3_in, INPUT);
+  pinMode(col_pin2_in, INPUT);
+  pinMode(col_pin1_in, INPUT);
+}
+
+void keypad_loop() {
+  // When a key is pressed on the keypad
+  if (keypad_current_state == keypad_key_pressed) {
+    // Makes sure the keypad counter is incremented up by one
+    keypress_delay_counter++;
+  }
+  // When the key has been pressed for longer than 100 loops
+  if (keypress_delay_counter > 100) {
+    // Make the keypad's state idle
+    keypad_current_state = keypad_idle;
+  }
+  // For loop to make all the row pins high one at a time
+  for (int row = 0; row < 4; row++) {
+    // Sends a signal to one row every loop
+    digitalWrite(row_pin_array[row], HIGH);
+    // For loop to check the state of each column pins one at a time
+    for (int col = 0; col < 3; col++) {
+      // Finds out which column got the signal from the row
+      if (digitalRead(col_pin_array[col]) == HIGH) {
+        // Makes the state of the keypad key pressed
+        keypad_current_state = keypad_key_pressed;
+        // The equations find the index of the key pressed in the key array with the help of row and columns number
+        int index = 3 * row + col;
+        // Gives the variabale keypad_key the correct key value that was pressed based on index 
+        keypad_key = key_array[index];
+        // Makes the state of the buzzer key pressed so it buzzes
+        keypad_buzzer_current_state = keypad_buzzer_key_pressed;
+      }
+    }
+    // Tells the row to stop sending the signal so the next row can send a new signal in next loop
+    digitalWrite(row_pin_array[row], LOW);
+  }
+}

@@ -1,0 +1,42 @@
+// This file is important since it uses most of the other files and uses them to make the system function
+int sys_broken = 1;                 // This is the broken state of the system
+int sys_intact = 0;                 // This is the intact state of the system
+int sys_configure = 2;              // This is the configure state of the system
+int sys_current_state = sys_intact; // This is the current state of the system
+
+void sys_loop() {
+  // When the light sensor is receiving the laser light and the correct password is entered and the system state is broken
+  if (is_lightsensor_active() == true && pwm_current_state == pwm_correct && sys_current_state == sys_broken) {
+    // Turn the system's current state intact
+    sys_current_state = sys_intact;
+    // Turn the alarm buzzer's state OFF
+    alarm_buzzer_current_state = alarm_buzzer_state_OFF;
+    // Turn the led's current state armed which is green
+    led_current_state = led_armed_state;
+  }
+  // When the lightsensor value is not what was expected and the system state is intact
+  else if (is_lightsensor_active() == false && sys_current_state == sys_intact) {
+    // Turn the system's current state broken
+    sys_current_state = sys_broken;
+    // Turn the alarm buzzer's state ON
+    alarm_buzzer_current_state = alarm_buzzer_state_on;
+    // Turn the led's current state disarmed which is red
+    led_current_state = led_disarmed_state;
+  }
+  // When the system state is intact and the master password is correct
+  else if (sys_current_state == sys_intact && pwm_current_state == pwm_master_correct) {
+    // Turn the system's current state configure
+    sys_current_state = sys_configure;
+    // Turn the alarm buzzer's state OFF
+    alarm_buzzer_current_state = alarm_buzzer_state_OFF;
+    // Turn the led's current state setup which is blue
+    led_current_state = led_setup_state;
+  }
+  // When the system state is configured and the password is correct
+  else if (sys_current_state == sys_configure && pwm_current_state == pwm_correct) {
+    // Turn the system's current state intact
+    sys_current_state = sys_intact;
+    // Turn the led's current state armed which is green
+    led_current_state = led_armed_state;
+  }
+}

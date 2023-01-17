@@ -1,0 +1,22 @@
+// This file controls the keypad buzzer telling it to play a certain frequency when the keypad is pressed
+int keypad_buzzer_idle = 0;                           // This is the state of keypad buzzer when it is OFF
+int keypad_buzzer_key_pressed = 1;                    // This is the state of keypad buzzer when a key is pressed
+int keypad_buzzer_current_state = keypad_buzzer_idle; // This is the current state of keypad buzzer and it is set to OFF at the start
+int keypad_buzzer_pin = 12;                           // This is the pin number the keypad buzzer is connected in
+int keypad_buzzer_frequency = 2000;                   // This is the frequency the buzzer will play at
+int keypad_buzzer_duration = 100;                     // This is how long the buzzer will buzz when a key is pressed
+
+void keypad_buzzer_setup() {
+  // Setting the arduino gpio pin to output for controlling the buzzer
+  pinMode(keypad_buzzer_pin, OUTPUT);
+}
+
+void keypad_buzzer_loop() {
+  // When the current state of the keypad buzzer is key pressed
+  if (keypad_buzzer_current_state == keypad_buzzer_key_pressed) {
+    // Buzz the keypad buzzer at the frequency given and play it as long as given duration
+    tone(keypad_buzzer_pin, keypad_buzzer_frequency, keypad_buzzer_duration);
+    // Then turn the keypad buzzer OFF when a key is unpressed
+    keypad_buzzer_current_state = keypad_buzzer_idle;
+  }
+}

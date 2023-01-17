@@ -1,0 +1,24 @@
+// This file checks the light sensor's received light intensity
+
+const int lightsensor_pin = A0; // This is the pin number the light sensor is connected in
+int lightsensor_value = 0; // This is the variable used to hold the light intensity value
+int lightsensor_threshold = 1000; // This is the light intensity threshold when system is intact
+void lightsensor_setup() {
+  // Makes sure that the light sensor is configured as input pin
+  pinMode(lightsensor_pin, INPUT);
+}
+void lightsensor_loop() {
+  // This is the light intensity current value
+  lightsensor_value = analogRead(lightsensor_pin);
+}
+
+bool is_lightsensor_active() {
+  // This function return true if the light intensity is greater than the 
+  // Threshold or returns false otherwise 
+  if (lightsensor_value > lightsensor_threshold) {
+    return true;
+  }
+  else {
+     return false;
+  }
+}

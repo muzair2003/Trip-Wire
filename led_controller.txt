@@ -1,0 +1,58 @@
+// This file configures the LED and its colours and tells it to light up a specific colour respective to the system's state
+
+int red_pin = A2;                        // This is the pin number on which red colour is controlled
+int green_pin = A1;                      // This is the pin number on which green colour is controlled
+int blue_pin = A3;                       // This is the pin number on which blue colour is controlled
+int led_disarmed_state = 0;              // This is the disarmed state of the led
+int led_armed_state = 1;                 // This is the armed state of the led
+int led_error_state = 2;                 // This is the error state of the led
+int led_setup_state = 3;                 // This is the setup state of the led
+int led_current_state = led_armed_state; // This is the current state of the led and is set to armed at the time of start
+unsigned int led_counter = 0;            // This is the loop counter that is used to make the LED flicker in the error state
+
+void led_setup() {
+  // This makes sure that all the colour pins are configured as output
+  pinMode(red_pin, OUTPUT);
+  pinMode(green_pin, OUTPUT);
+  pinMode(blue_pin, OUTPUT);
+}
+
+void color(int red_value, int green_value, int blue_value) {
+  // Sets the intensity of red colour with the variables passed in this function 
+  analogWrite(red_pin, red_value);
+  // Sets the intensity of green colour with the variables passed in this function 
+  analogWrite(green_pin, green_value);
+  // Sets the intensity of blue colour with the variables passed in this function 
+  analogWrite(blue_pin, blue_value);
+}
+
+void led_loop() {
+  // When the system is armed
+  if (led_current_state == led_armed_state) {
+    // Turn the led green
+    color(0, 255, 0);
+  }
+  // When the system is disarmed
+  else if (led_current_state == led_disarmed_state) {
+    // Turn the led red
+    color(255, 0, 0);
+  }
+  // When the system is in setup mode
+  else if (led_current_state == led_setup_state) {
+    // Turn the led blue
+    color(0, 0, 255);
+  }
+  // When the system is in error mode code below would flicker the red LED
+  else if (led_current_state == led_error_state) {
+    // When the led_counter variable is divided by 60 and the remainder is between 0 and 30 turn the led red
+    if (led_counter % 60 > 0 && led_counter % 60 < 30) {
+      color(255, 0, 0);
+    }
+    // When the led_counter variable is divided by 60 and the remainder is between 31 and 59 turn the led OFF
+    else {    
+      color(0, 0, 0);
+    }
+  }
+  // Increment led counter by one in every loop
+  led_counter++;
+}

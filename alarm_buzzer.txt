@@ -1,0 +1,22 @@
+// This file gives the alarm buzzer instructions to turn OFF and to turn ON when the current state variable is change to ON state or OFF state
+int alarm_buzzer_state_OFF = 0;         // This is the state of the alarm buzzer when it is turned OFF
+int alarm_buzzer_state_on = 1;          // This is the state of the alarm buzzer when it is turned ON
+int alarm_buzzer_pin = 9;               // This is the pin number the alarm buzzer is connected to
+int alarm_buzzer_current_state = alarm_buzzer_state_OFF;          // This is the current state of the alarm buzzer and it is set to OFF at start time
+
+void alarm_buzzer_setup() {
+  // Setting the arduino GPIO pin to output for controlling the buzzer
+  pinMode(alarm_buzzer_pin, OUTPUT);
+}
+void alarm_buzzer_loop() {
+  // When the current state of the alarm buzzer is OFF
+  if (alarm_buzzer_current_state == alarm_buzzer_state_OFF) {
+    // Turn OFF the alarm buzzer
+    digitalWrite(alarm_buzzer_pin, LOW);
+  }
+  // when the current state of the alarm buzzer is ON
+  else if (alarm_buzzer_current_state == alarm_buzzer_state_on) {
+    // Turns ON the alarm buzzer
+    digitalWrite(alarm_buzzer_pin, HIGH);
+  }
+}

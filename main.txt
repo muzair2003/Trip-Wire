@@ -1,0 +1,26 @@
+// This file puts all the modules in one place and executes them
+
+// This setup function gets executed only once, when the system starts. In all the functions defined below, all the device pins have been configured and initialized
+void setup() {
+  laser_setup();
+  alarm_buzzer_setup();
+  bluetooth_setup();
+  led_setup();
+  keypad_buzzer_setup();
+  keypad_setup();
+  lightsensor_setup();
+}
+
+// This loop function keeps executing until the system is powered OFF. In every loop all the modules execute and perform their respective tasks
+void loop() {
+ pwm_loop();
+ lightsensor_loop();
+ keypad_buzzer_loop();
+ alarm_buzzer_loop();
+ bluetooth_loop();
+ keypad_loop();
+ password_input();
+ led_loop();
+ // This is the main system loop
+ sys_loop();
+}
