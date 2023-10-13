@@ -1,4 +1,3 @@
-Trip-Wire
 Trip-Wire is a security system that utilizes various modules to detect intrusions and notify the user. The system is built using Arduino and integrates components such as a laser, light sensor, Bluetooth module, and more.
 
 Modules Description:
